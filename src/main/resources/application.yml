@@ -24,3 +24,8 @@ app:
   auth:
     url: ${AUTH_URL}
     internal-api-key: ${INTERNAL_API_KEY}
+
+mercadopago:
+  client-id: ${MP_CLIENT_ID}
+  client-secret: ${MP_CLIENT_SECRET}
+  redirect-uri: ${MP_REDIRECT_URI}
