@@ -1,5 +1,6 @@
 package com.ironvault.merchants.application;
 
+import com.ironvault.merchants.adapter.out.auth.AuthClient;
 import com.ironvault.merchants.domain.model.MerchantProfile;
 import com.ironvault.merchants.domain.port.in.CreateMerchantProfileUseCase;
 import com.ironvault.merchants.domain.port.out.MerchantProfileRepositoryPort;
@@ -14,9 +15,11 @@ import java.util.UUID;
 public class CreateMerchantProfileService implements CreateMerchantProfileUseCase {
 
     private final MerchantProfileRepositoryPort repositoryPort;
+    private final AuthClient authClient;
 
-    public CreateMerchantProfileService(MerchantProfileRepositoryPort repositoryPort) {
+    public CreateMerchantProfileService(MerchantProfileRepositoryPort repositoryPort, AuthClient authClient) {
         this.repositoryPort = repositoryPort;
+        this.authClient = authClient;
     }
 
     @Override
@@ -31,6 +34,10 @@ public class CreateMerchantProfileService implements CreateMerchantProfileUseCas
         MerchantProfile profile = MerchantProfile.create(userId, businessName, cpfOuCnpj, segment, phone, website);
         log.warn("Creating merchant profile for userId={}", userId);
 
-        return repositoryPort.save(profile);
+        MerchantProfile saved = repositoryPort.save(profile);
+
+        authClient.updateUserMerchantId(userId, saved.getId());
+
+        return saved;
     }
 }
