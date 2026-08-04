@@ -37,9 +37,8 @@ public class AuthClient {
 
             HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
 
-            restTemplate.exchange(
+            restTemplate.postForObject(
                     authUrl + "/api/internal/users/" + userId + "/merchant",
-                    org.springframework.http.HttpMethod.PATCH,
                     request,
                     Void.class
             );
